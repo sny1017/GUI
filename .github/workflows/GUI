@@ -1,0 +1,132 @@
+classdef GUIproject1_1 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure          matlab.ui.Figure
+        TabGroup          matlab.ui.container.TabGroup
+        FlightpathTab     matlab.ui.container.Tab
+        UIAxes            matlab.ui.control.UIAxes
+        DataTab           matlab.ui.container.Tab
+        UITable           matlab.ui.control.Table
+        ImportfileforFlySimSimulationLabel  matlab.ui.control.Label
+        ImportfileButton  matlab.ui.control.Button
+        LoadfileButton    matlab.ui.control.Button
+        ExecuteButton     matlab.ui.control.Button
+        ClearButton       matlab.ui.control.Button
+        Lamp              matlab.ui.control.Lamp
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Button pushed function: ExecuteButton
+        function ExecuteButtonPushed(app, event)
+            app.Lamp.Color = [0 1 0];
+        end
+
+        % Button pushed function: ClearButton
+        function ClearButtonPushed(app, event)
+            app.Lamp.Color = [1 0 0];
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 640 480];
+            app.UIFigure.Name = 'UI Figure';
+
+            % Create TabGroup
+            app.TabGroup = uitabgroup(app.UIFigure);
+            app.TabGroup.Position = [171 18 456 399];
+
+            % Create FlightpathTab
+            app.FlightpathTab = uitab(app.TabGroup);
+            app.FlightpathTab.Title = 'Flight path';
+
+            % Create UIAxes
+            app.UIAxes = uiaxes(app.FlightpathTab);
+            title(app.UIAxes, 'Flight Trajectory')
+            xlabel(app.UIAxes, 'X position')
+            ylabel(app.UIAxes, 'Y position')
+            app.UIAxes.Position = [1 1 454 365];
+
+            % Create DataTab
+            app.DataTab = uitab(app.TabGroup);
+            app.DataTab.Title = 'Data';
+
+            % Create UITable
+            app.UITable = uitable(app.DataTab);
+            app.UITable.ColumnName = {'Column 1'; 'Column 2'; 'Column 3'; 'Column 4'};
+            app.UITable.RowName = {};
+            app.UITable.Position = [1 1 455 365];
+
+            % Create ImportfileforFlySimSimulationLabel
+            app.ImportfileforFlySimSimulationLabel = uilabel(app.UIFigure);
+            app.ImportfileforFlySimSimulationLabel.FontName = 'Times New Roman';
+            app.ImportfileforFlySimSimulationLabel.FontSize = 24;
+            app.ImportfileforFlySimSimulationLabel.Position = [18 433 336 29];
+            app.ImportfileforFlySimSimulationLabel.Text = 'Import file for FlySim Simulation';
+
+            % Create ImportfileButton
+            app.ImportfileButton = uibutton(app.UIFigure, 'push');
+            app.ImportfileButton.Position = [37 370 100 22];
+            app.ImportfileButton.Text = 'Import file';
+
+            % Create LoadfileButton
+            app.LoadfileButton = uibutton(app.UIFigure, 'push');
+            app.LoadfileButton.Position = [37 256 100 22];
+            app.LoadfileButton.Text = 'Load file';
+
+            % Create ExecuteButton
+            app.ExecuteButton = uibutton(app.UIFigure, 'push');
+            app.ExecuteButton.ButtonPushedFcn = createCallbackFcn(app, @ExecuteButtonPushed, true);
+            app.ExecuteButton.Position = [37 140 100 22];
+            app.ExecuteButton.Text = 'Execute';
+
+            % Create ClearButton
+            app.ClearButton = uibutton(app.UIFigure, 'push');
+            app.ClearButton.ButtonPushedFcn = createCallbackFcn(app, @ClearButtonPushed, true);
+            app.ClearButton.Position = [37 69 100 22];
+            app.ClearButton.Text = 'Clear';
+
+            % Create Lamp
+            app.Lamp = uilamp(app.UIFigure);
+            app.Lamp.Position = [144 142 20 20];
+            app.Lamp.Color = [1 0 0];
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = GUIproject1_1
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end
